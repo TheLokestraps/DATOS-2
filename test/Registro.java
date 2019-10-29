@@ -56,13 +56,9 @@ public class Registro extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txt_verContraseña = new javax.swing.JTextField();
         btn_registrar = new javax.swing.JButton();
-        rdb_profesor = new javax.swing.JRadioButton();
         lbl_mensajes = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        rdb_estudiante = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
         txt_cedula = new javax.swing.JTextField();
-        rdb_administrador = new javax.swing.JRadioButton();
         Imagen = new javax.swing.JLabel();
         SelImagen = new javax.swing.JButton();
 
@@ -94,21 +90,8 @@ public class Registro extends javax.swing.JFrame {
             }
         });
 
-        rdbg_tipoEstudiante.add(rdb_profesor);
-        rdb_profesor.setText("Profesor");
-
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Tipo Usuario");
-
-        rdbg_tipoEstudiante.add(rdb_estudiante);
-        rdb_estudiante.setSelected(true);
-        rdb_estudiante.setText("Estudiante");
-
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Cedula");
-
-        rdbg_tipoEstudiante.add(rdb_administrador);
-        rdb_administrador.setText("Administrador");
 
         Imagen.setBorder(javax.swing.BorderFactory.createMatteBorder(4, 4, 4, 4, new java.awt.Color(0, 0, 0)));
 
@@ -124,21 +107,8 @@ public class Registro extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(lbl_mensajes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(rdb_estudiante)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rdb_administrador)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rdb_profesor)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(33, 33, 33)
+                .addComponent(lbl_mensajes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -193,14 +163,7 @@ public class Registro extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(SelImagen))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rdb_estudiante)
-                    .addComponent(rdb_profesor)
-                    .addComponent(rdb_administrador))
-                .addGap(42, 42, 42)
+                .addGap(115, 115, 115)
                 .addComponent(btn_registrar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_mensajes, javax.swing.GroupLayout.DEFAULT_SIZE, 15, Short.MAX_VALUE)
@@ -368,9 +331,12 @@ public class Registro extends javax.swing.JFrame {
         int returnVal = chooser.showOpenDialog(null);
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             //corredores.get(indice).Foto = chooser.getSelectedFile().getParent();
-            String aux;
-            aux = chooser.getSelectedFile().getName();
-            JOptionPane.showMessageDialog(rootPane, aux);
+            
+            String aux = chooser.getSelectedFile().getPath();
+            String substring = aux.substring(aux.lastIndexOf("Lab2Estructuradedatos")+22);
+            
+            JOptionPane.showMessageDialog(rootPane, substring);
+            
 //            String Directorio = "ImagenUsuarios";
 //            File f = new File(Directorio);
 //            if(!f.exists()){
@@ -431,12 +397,8 @@ public class Registro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel lbl_mensajes;
-    private javax.swing.JRadioButton rdb_administrador;
-    private javax.swing.JRadioButton rdb_estudiante;
-    private javax.swing.JRadioButton rdb_profesor;
     private javax.swing.ButtonGroup rdbg_tipoEstudiante;
     private javax.swing.JTextField txt_cedula;
     private javax.swing.JTextField txt_contraseña;
