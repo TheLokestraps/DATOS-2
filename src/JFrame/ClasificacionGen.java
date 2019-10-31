@@ -5,19 +5,135 @@
  */
 package JFrame;
 
+import Clases.*;
+import java.time.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author TheLokestraps
  */
-public class ClasificacionGen extends javax.swing.JFrame {
+public class ClasificacionGen extends javax.swing.JDialog {
 
     /**
      * Creates new form ClasificacionGen
      */
-    public ClasificacionGen() {
+    
+    public static Nodo ptr;
+    
+    public ClasificacionGen(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+        Nodo p = ptr;
+        ptr = LeerGen(p);
+        p = ptr;
+        ptr = OrdenarPtr(p);
+        showList(ptr);
     }
+    
+    private Nodo LeerGen(Nodo ptr2){
+        Nodo p,q,r;
+        for(Nodo ptr1 : Inicio.ptrS){
+            if(ptr1 != null){
+                if(ptr2 == null){
+                    ptr2 = ptr1;
+                }else{
+                    q = ptr2;
+                    while(q != null){
+                       p = ptr1;
+                       while(p!=null){
+                           if(q.Player.Nombre.equals(p.Player.Nombre)){
+                               Duration temp;
+                               temp = p.Time;
+                               q.Time = temp.plus(p.Time);
+                           }
+                           p = p.link;
+                       }
+                       q = q.link;
+                    }
+                }
+                
+            }
+        }
+        return ptr2;
+    }
+    
+    
+    private Nodo OrdenarPtr(Nodo ptr){
+        Nodo p,actual,q;
+        if(ptr!=null){
+            
+            p = ptr;
+            while(p != null){
+                actual = p.link;
+                while(actual != null){
+                    if(p.Time.compareTo(actual.Time)> 0){
+                        q = p;
+                        p.Player = actual.Player;
+                        p.Time = actual.Time;
+                        actual.Player = q.Player;
+                        actual.Time = q.Time;
+                        
+                    }
+                    actual = actual.link;
+                }
+                p = p.link;
+            }
+        }
+        
+        return ptr;
+    }
+   private void showList(Nodo ptr){
 
+        DefaultTableModel modelX = (DefaultTableModel) Tabla.getModel();
+        modelX.setRowCount(0);
+        Nodo p = ptr;
+        Nodo antp = null;
+        int i = 1;
+        Object[] row = new Object[6];
+        while(p!= null){
+            if(p == ptr){
+                row[0] = Integer.toString(i);
+                row[1] = Integer.toString(p.Player.Numero);
+                row[2] = p.Player.Nombre;
+                row[3] = p.Player.Equipo;
+                row[4] = CorrejirD(p.Time);
+                modelX.addRow(row);
+                antp = p;
+                p = p.link;
+                i++;
+            }else{
+                row[0] = Integer.toString(i);
+                row[1] = Integer.toString(p.Player.Numero);
+                row[2] = p.Player.Nombre;
+                row[3] = p.Player.Equipo;
+                row[4] = CorrejirD(p.Time);
+                Duration Dif, Aux = p.Time;
+                
+                if(antp != null){
+                    Dif = Aux.minus(ptr.Time);
+                    row[5] = "+ "+CorrejirD(Dif);
+                    antp = p;
+                    p = p.link;
+                    modelX.addRow(row);
+                    i++;
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Dumb");
+                }
+            }
+        }
+    }
+    
+    private static String CorrejirD(Duration D){
+        long AñadirH;
+        AñadirH = 24*(D.toDaysPart());
+        String AD = D.toHoursPart()+AñadirH+"H "+D.toMinutesPart()+"' "+D.toSecondsPart()+"''";
+        return AD;
+    }
+     
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,7 +152,8 @@ public class ClasificacionGen extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Clasificacion General");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -80,10 +197,7 @@ public class ClasificacionGen extends javax.swing.JFrame {
 
         Tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Posicion", "Numero", "Nombre", "Equipo", "Tiempo", "Diferencia"
@@ -109,6 +223,11 @@ public class ClasificacionGen extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
 
         jButton1.setText("Regresar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -162,6 +281,10 @@ public class ClasificacionGen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -192,7 +315,13 @@ public class ClasificacionGen extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ClasificacionGen().setVisible(true);
+                ClasificacionGen dialog = new ClasificacionGen(new javax.swing.JFrame(), true);
+		dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				System.exit(0);
+			}
+		});
             }
         });
     }

@@ -15,14 +15,15 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author ieperez
  */
-public class IngresarStanding extends javax.swing.JFrame {
+public class IngresarStandingN extends javax.swing.JDialog {
 
     /**
      * Creates new form IngresarStanding
      */
     public Nodo ptr;
     
-    public IngresarStanding() {
+    public IngresarStandingN(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
         LlenarC();
         SetVuelta();
@@ -58,7 +59,7 @@ public class IngresarStanding extends javax.swing.JFrame {
                 Duration Dif, Aux = p.Time;
                 
                 if(antp != null){
-                    Dif = Aux.minus(antp.Time);
+                    Dif = Aux.minus(ptr.Time);
                     row[4] = "+ "+CorrejirD(Dif);
                     antp = p;
                     p = p.link;
@@ -125,7 +126,10 @@ public class IngresarStanding extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Ingresar Standing");
+        setPreferredSize(new java.awt.Dimension(1000, 630));
+        setSize(new java.awt.Dimension(0, 0));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -137,7 +141,7 @@ public class IngresarStanding extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 952, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,7 +189,7 @@ public class IngresarStanding extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Posicion", "Nombre", "Equipo", "Tiempo", "Puntos"
+                "Posicion", "Nombre", "Equipo", "Tiempo", "Diferencia"
             }
         ) {
             Class[] types = new Class [] {
@@ -290,7 +294,7 @@ public class IngresarStanding extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(TimeDone, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 498, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(49, 49, 49))
         );
@@ -329,7 +333,7 @@ public class IngresarStanding extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -344,6 +348,8 @@ public class IngresarStanding extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        getAccessibleContext().setAccessibleDescription("Sirve para ingresar los standings");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -356,7 +362,7 @@ public class IngresarStanding extends javax.swing.JFrame {
            Nodo p = ptr;
            if(Inicio.VerStringtoInt(datos[0]) && Inicio.VerStringtoInt(datos[1]) && Inicio.VerStringtoInt(datos[2])){
                T = Duration.parse("PT"+datos[0]+"H"+datos[1]+"M"+datos[2]+"S");
-               if(Ver() == true){
+               
                    int i = 0;boolean Swp=false;
                    while(i<Inicio.corredores.size() && Swp != true){
                        if(Inicio.corredores.get(i).Nombre == Corredores.getSelectedItem()){
@@ -368,8 +374,6 @@ public class IngresarStanding extends javax.swing.JFrame {
                            i++;
                        }
                    }
-                   
-               }
            }
            
            
@@ -423,6 +427,8 @@ public class IngresarStanding extends javax.swing.JFrame {
             if(Inicio.ptrS.size() > Inicio.Controlador){
                 Inicio.ptrS.set(Inicio.Controlador, ptr);
                 Inicio.Controlador++;
+                Inicio.Vueltas++;
+                Standing.setText("Standing"+" "+Integer.toString(Inicio.Vueltas));
                 if(Inicio.ptrS.size() != Inicio.Controlador){
                     ptr = Inicio.ptrS.get(Inicio.Controlador);
                     showList(ptr);
@@ -435,6 +441,8 @@ public class IngresarStanding extends javax.swing.JFrame {
             }else{
                 Inicio.ptrS.add(ptr);
                 Inicio.Controlador++;
+                Inicio.Vueltas++;
+                Standing.setText("Standing"+" "+Integer.toString(Inicio.Vueltas));
                 ptr = null;
                 DefaultTableModel modelX = (DefaultTableModel) tabla.getModel();
                 modelX.setRowCount(0);
@@ -467,6 +475,8 @@ public class IngresarStanding extends javax.swing.JFrame {
         }
         if(Inicio.Controlador != 0 ){
             Inicio.Controlador--;
+            Inicio.Vueltas--;
+            Standing.setText("Standing"+" "+Integer.toString(Inicio.Vueltas));
             if(Inicio.ptrS.size() > Inicio.Controlador){
                 ptr = Inicio.ptrS.get(Inicio.Controlador);
                 System.out.println(ptr.Player.Nombre);
@@ -504,20 +514,27 @@ public class IngresarStanding extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(IngresarStanding.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IngresarStandingN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(IngresarStanding.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IngresarStandingN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(IngresarStanding.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IngresarStandingN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(IngresarStanding.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IngresarStandingN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new IngresarStanding().setVisible(true);
+                IngresarStandingN dialog = new IngresarStandingN(new javax.swing.JFrame(), true);
+		dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				System.exit(0);
+			}
+		});
             }
         });
     }

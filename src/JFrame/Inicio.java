@@ -27,6 +27,7 @@ public class Inicio extends javax.swing.JFrame {
     
     public static ArrayList<Nodo> ptrS;
     public static int Controlador;
+    public static int Vueltas;
     
     public Inicio() {
         initComponents();
@@ -35,10 +36,11 @@ public class Inicio extends javax.swing.JFrame {
         
         corredores = new ArrayList<>();
         ptrS = new ArrayList<>();
-        Controlador = 1;
+        Controlador = 0;
+        Vueltas = 1;
         
     }
-    public static void LecturaE(){
+    public static void LecturaC(){
             corredores.clear();
             String ruta = "Corredores";
             String nombr = "Corredores.txt";
@@ -90,6 +92,7 @@ public class Inicio extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Inicio");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -109,6 +112,11 @@ public class Inicio extends javax.swing.JFrame {
         );
 
         jButton1.setText("Clasificacion General");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Clasificacion Por Equipos");
 
@@ -161,6 +169,7 @@ public class Inicio extends javax.swing.JFrame {
         });
 
         jButton5.setText("Revisar Competidores");
+        jButton5.setEnabled(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -207,11 +216,18 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        LecturaE();
-        IngresarStanding C = new IngresarStanding();
+        LecturaC();
+        IngresarStandingN C = new IngresarStandingN(this,true);
+        this.setVisible(false);
         C.setVisible(true);
-        
+        this.setVisible(true);
+               
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ClasificacionGen g = new ClasificacionGen(this,true);
+        g.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
