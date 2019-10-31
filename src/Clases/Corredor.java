@@ -19,7 +19,7 @@ public class Corredor {
     public int Edad;
     public String Foto;
     
-    public Corredor(String Nombre,String Nacion, String Equipo, int Numero, int Edad, String Foto){
+    public Corredor(int Numero,String Nombre, String Nacion, String Equipo, int Edad, String Foto){
         this.Nombre = Nombre;
         this.Equipo = Equipo;
         this.Nacionalidad = Nacion;

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package lab2estructuradedatos;
+import JFrame.*;
 
 /**
  *
@@ -15,7 +16,8 @@ public class Lab2Estructuradedatos {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Inicio C = new Inicio();
+        C.setVisible(true);
     }
     
 }

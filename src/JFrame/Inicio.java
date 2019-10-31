@@ -5,8 +5,14 @@
  */
 package JFrame;
 
+import Clases.*;
 import java.awt.Image;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,14 +23,51 @@ public class Inicio extends javax.swing.JFrame {
     /**
      * Creates new form Inicio
      */
+    public static ArrayList<Corredor> corredores;
+    
+    public static ArrayList<Nodo> ptrS;
+    public static int Controlador;
+    
     public Inicio() {
         initComponents();
         ImageIcon imageIcon = new ImageIcon(new ImageIcon("Iconos\\unnamed.png").getImage().getScaledInstance(Imagen.getWidth(),Imagen.getHeight(), Image.SCALE_DEFAULT));
         Imagen.setIcon(imageIcon);
-       
+        
+        corredores = new ArrayList<>();
+        ptrS = new ArrayList<>();
+        Controlador = 1;
         
     }
-    
+    public static void LecturaE(){
+            corredores.clear();
+            String ruta = "Corredores";
+            String nombr = "Corredores.txt";
+            File archivo = new File(ruta,nombr);
+            try(Scanner s = new Scanner(archivo)){
+                while(s.hasNextLine()){
+                        String Linea = s.nextLine();
+                        String[] datos = Linea.split("//");
+                        int Numero = Integer.parseInt(datos[0].strip());
+                        int Edad = Integer.parseInt(datos[4].strip());
+                        Corredor elE = new Corredor(Numero,datos[1],datos[2],datos[3],Edad,null);
+                        corredores.add(elE);
+
+
+                    }
+            } catch (FileNotFoundException ex) {
+                     System.out.println("test");
+                    JOptionPane.showMessageDialog(null, "No se encontro el archivo");
+            }
+
+        }
+    public static boolean VerStringtoInt(String s){
+             try{
+               Integer.parseInt(s);
+               return true;
+            }catch(NumberFormatException e){
+               return false;
+            }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -111,6 +154,11 @@ public class Inicio extends javax.swing.JFrame {
         );
 
         jButton4.setText("Ingresar Datos de Carreras");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Revisar Competidores");
 
@@ -157,6 +205,13 @@ public class Inicio extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        LecturaE();
+        IngresarStanding C = new IngresarStanding();
+        C.setVisible(true);
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments

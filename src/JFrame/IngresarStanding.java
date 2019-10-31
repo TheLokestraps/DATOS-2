@@ -4,6 +4,12 @@
  * and open the template in the editor.
  */
 package JFrame;
+import Clases.*;
+import java.text.ParseException;
+import java.time.*;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -14,9 +20,81 @@ public class IngresarStanding extends javax.swing.JFrame {
     /**
      * Creates new form IngresarStanding
      */
+    public Nodo ptr;
+    
     public IngresarStanding() {
         initComponents();
+        LlenarC();
+        SetVuelta();
     }
+    
+    private void SetVuelta(){
+        Standing.setText("Standing"+" "+Integer.toString(Inicio.Controlador));
+    }
+    
+    void showList(Nodo ptr){
+
+        DefaultTableModel modelX = (DefaultTableModel) tabla.getModel();
+        modelX.setRowCount(0);
+        Nodo p = ptr;
+        Nodo antp = null;
+        int i = 1;
+        Object[] row = new Object[5];
+        while(p!= null){
+            if(p == ptr){
+                row[0] = Integer.toString(i);
+                row[1] = p.Player.Nombre;
+                row[2] = p.Player.Equipo;
+                row[3] = CorrejirD(p.Time);
+                modelX.addRow(row);
+                antp = p;
+                p = p.link;
+                i++;
+            }else{
+                row[0] = Integer.toString(i);
+                row[1] = p.Player.Nombre;
+                row[2] = p.Player.Equipo;
+                row[3] = CorrejirD(p.Time);
+                Duration Dif, Aux = p.Time;
+                
+                if(antp != null){
+                    Dif = Aux.minus(antp.Time);
+                    row[4] = "+ "+CorrejirD(Dif);
+                    antp = p;
+                    p = p.link;
+                    modelX.addRow(row);
+                    i++;
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Dumb");
+                }
+            }
+        }
+    }
+    
+   
+    
+    private void LlenarC(){
+        this.Corredores.removeAllItems();
+        this.Corredores.addItem("Seleccione Corredor");
+        System.out.println(Integer.toString(Inicio.corredores.size()));
+        Inicio.corredores.forEach((C) -> {
+            this.Corredores.addItem(C.Nombre);
+        });
+    }
+    
+    private static String CorrejirD(Duration D){
+        long AñadirH;
+        AñadirH = 24*(D.toDaysPart());
+        String AD = D.toHoursPart()+AñadirH+"H "+D.toMinutesPart()+"' "+D.toSecondsPart()+"''";
+        return AD;
+    }
+    
+    private boolean Ver(){
+        return Inicio.ptrS.size() <= Inicio.Controlador;
+    }
+    
+   
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,7 +111,7 @@ public class IngresarStanding extends javax.swing.JFrame {
         Standing = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabla = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         Corredores = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
@@ -42,11 +120,10 @@ public class IngresarStanding extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,7 +137,7 @@ public class IngresarStanding extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 952, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -68,7 +145,7 @@ public class IngresarStanding extends javax.swing.JFrame {
         );
 
         Standing.setBackground(new java.awt.Color(255, 255, 204));
-        Standing.setText("Standing");
+        Standing.setText(" Standing");
         Standing.setOpaque(true);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -77,8 +154,8 @@ public class IngresarStanding extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(353, 353, 353)
-                .addComponent(Standing, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(337, 337, 337)
+                .addComponent(Standing, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -103,7 +180,7 @@ public class IngresarStanding extends javax.swing.JFrame {
             .addGap(0, 41, Short.MAX_VALUE)
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -126,7 +203,7 @@ public class IngresarStanding extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabla);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 2, 13)); // NOI18N
         jLabel3.setText("Corredor");
@@ -139,22 +216,40 @@ public class IngresarStanding extends javax.swing.JFrame {
         Corredor.setText("A");
 
         jButton1.setText("Ingresar Tiempo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 2, 13)); // NOI18N
         jLabel5.setText("Eliminar Tiempo ");
 
         jButton2.setText("Eliminar Tiempo");
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 2, 13)); // NOI18N
-        jLabel6.setText("Eliminar Corredor");
-
-        jButton3.setText("Eliminar Corredor");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("<");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText(">");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Regresar a Menu Principal");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
+        jLabel7.setText("HH:MM:SS");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -171,11 +266,6 @@ public class IngresarStanding extends javax.swing.JFrame {
                         .addComponent(Corredores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(51, 51, 51)
                         .addComponent(Corredor, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TimeDone, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(11, 11, 11)
                         .addComponent(jButton4)
@@ -183,16 +273,19 @@ public class IngresarStanding extends javax.swing.JFrame {
                         .addComponent(jButton6)
                         .addGap(24, 24, 24)
                         .addComponent(jButton5))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jButton3))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TimeDone, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 498, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(49, 49, 49))
         );
@@ -215,16 +308,14 @@ public class IngresarStanding extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(TimeDone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(45, 45, 45)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addGap(28, 28, 28)
                         .addComponent(jButton1)
-                        .addGap(42, 42, 42)
+                        .addGap(37, 37, 37)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(jButton2))
-                        .addGap(26, 26, 26)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jButton3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4)
@@ -250,6 +341,124 @@ public class IngresarStanding extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(!TimeDone.getText().isEmpty() && !Corredores.getSelectedItem().toString().equals("Seleccione Corredor")){
+           Corredor S;
+           String s = TimeDone.getText().strip();
+           String[] datos = s.split(":");
+           Duration T;
+           Nodo p = ptr;
+           if(Inicio.VerStringtoInt(datos[0]) && Inicio.VerStringtoInt(datos[1]) && Inicio.VerStringtoInt(datos[2])){
+               T = Duration.parse("PT"+datos[0]+"H"+datos[1]+"M"+datos[2]+"S");
+               if(Ver() == true){
+                   int i = 0;boolean Swp=false;
+                   while(i<Inicio.corredores.size() && Swp != true){
+                       if(Inicio.corredores.get(i).Nombre == Corredores.getSelectedItem()){
+                           S = Inicio.corredores.get(i);
+                           ptr = Nodo.Ordenado(p,S,T);
+                           showList(ptr);
+                           Swp =true;
+                       }else{
+                           i++;
+                       }
+                   }
+                   
+               }
+           }
+           
+           
+        }else{
+            if(TimeDone.getText().isEmpty()){
+                JOptionPane.showMessageDialog(rootPane,"Introducir Tiempo por Favor", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(rootPane,"Seleccione un corredor", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Nodo p = ptr;
+        int i = 0;boolean Swp=false;Corredor S;
+        if(!Corredores.getSelectedItem().toString().equals("Seleccione Corredor")){
+            while(i<Inicio.corredores.size() && Swp != true){
+                           if(Inicio.corredores.get(i).Nombre == Corredores.getSelectedItem()){
+                               S = Inicio.corredores.get(i);
+                               ptr = Nodo.Eliminar(p, S);
+                               showList(ptr);
+                               Swp =true;
+                           }else{
+                               i++;
+                           }
+                       }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        int i = 0;boolean Swp=false;
+        if(ptr != null){
+            if(Inicio.ptrS.size() > Inicio.Controlador-1){
+                int Aux = Inicio.Controlador-1;
+                Inicio.ptrS.set(Aux, ptr);
+                Inicio.Controlador++;
+            }else{
+                Inicio.ptrS.add(ptr);
+                Inicio.Controlador++;
+            }
+            System.out.println(Inicio.Controlador);
+            if(Inicio.ptrS.size() > (Inicio.Controlador-1)){
+                int Aux = Inicio.Controlador-1;
+                ptr = Inicio.ptrS.get(Aux);
+                showList(ptr);
+             }else{
+                    ptr = null;
+                    DefaultTableModel modelX = (DefaultTableModel) tabla.getModel();
+                    modelX.setRowCount(0);
+             }
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Imposible aumentar, primero llene la actual ", "ERROR", JOptionPane.ERROR_MESSAGE);   
+        }
+        System.out.println(Inicio.Controlador);
+            
+//        }else{
+//            JOptionPane.showMessageDialog(rootPane, "Imposible aumentar, primero llene la actual ", "ERROR", JOptionPane.ERROR_MESSAGE);
+//        }
+        
+//        while(i<Inicio.ptrS.size() && Swp != true){
+//            if(Inicio.ptrS.get(i).equals(ptr)){
+//                Inicio.ptrS.get(i) = ptr;
+//            }
+//        }
+        
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        System.out.println(Inicio.Controlador);
+        if(ptr != null){
+            if(Inicio.ptrS.size() > Inicio.Controlador){
+                Inicio.ptrS.set(Inicio.Controlador, ptr);
+            }else{
+                Inicio.ptrS.add(ptr);
+            }   
+        }
+        if(Inicio.Controlador != 1 ){
+            Inicio.Controlador--;
+            if(Inicio.ptrS.size() > Inicio.Controlador){
+                int Aux = Inicio.Controlador-1;
+                ptr = Inicio.ptrS.get(Aux);
+                System.out.println(ptr.Player.Nombre);
+                showList(ptr);
+             }else{
+                    ptr = null;
+                    DefaultTableModel modelX = (DefaultTableModel) tabla.getModel();
+                    modelX.setRowCount(0);
+             }
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Imposible retroceder, esta en vuelta 1", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -293,19 +502,18 @@ public class IngresarStanding extends javax.swing.JFrame {
     private javax.swing.JTextField TimeDone;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tabla;
     // End of variables declaration//GEN-END:variables
 }
