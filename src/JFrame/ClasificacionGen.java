@@ -28,8 +28,8 @@ public class ClasificacionGen extends javax.swing.JDialog {
         initComponents();
         Nodo p = ptr;
         ptr = LeerGen(p,Inicio.ptrS);
-//        p = ptr;
-//        ptr = OrdenarPtr(p);
+        p = ptr;
+        ptr = sortList(p);
         showList(ptr);
     }
     
@@ -91,6 +91,42 @@ public class ClasificacionGen extends javax.swing.JDialog {
         
         return ptr;
     }
+    
+    private Nodo sortList(Nodo head) {  
+        //Node current will point to head  
+        Nodo current = head, index = null;  
+          
+        if(head == null) {  
+            return head;  
+        }  
+        else {  
+            while(current != null) {  
+                //Node index will point to node next to current  
+                index = current.link;  
+                  
+                while(index != null) {  
+                    //If current node's data is greater than index's node data, swap the data between them  
+                    if(current.Time.compareTo(index.Time)>0) {
+                        
+                        Duration T = current.Time;
+                        Corredor Player = current.Player;  
+                        current.Player = index.Player;
+                        current.Time = index.Time;
+                        index.Time = T;
+                        index.Player = Player;
+                    }  
+                    index = index.link;  
+                }  
+                current = current.link;  
+            }      
+        }
+        return head;
+    }
+    
+    
+    
+    
+    
    private void showList(Nodo ptr){
 
         DefaultTableModel modelX = (DefaultTableModel) Tabla.getModel();

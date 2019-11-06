@@ -28,9 +28,9 @@ public class ClasificacionEquipos extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         NodoE p = ptr;
-        ptr = LeerGen(p);
+        ptr = LeerEquipos(p);
         p = ptr;
-        ptr = OrdenarPtr(p);
+        ptr = sortList(p);
         showList(ptr);
     }
     
@@ -43,7 +43,7 @@ public class ClasificacionEquipos extends javax.swing.JDialog {
     
     void LlenarEquipos(){
         E.clear();
-        for(Corredor C : Inicio.corredores){
+        Inicio.corredores.forEach((C) -> {
             boolean swp = false;
             String Entra = C.Equipo;
             for(String Com : E){
@@ -51,10 +51,10 @@ public class ClasificacionEquipos extends javax.swing.JDialog {
                     swp = true;
                 }
             }
-            if(swp != true){
+            if (swp != true) {
                 E.add(Entra);
             }
-        }
+        });
     }
  
     private NodoE addACola(NodoE ptr, String Equipo){
@@ -71,48 +71,120 @@ public class ClasificacionEquipos extends javax.swing.JDialog {
         }
         return ptr;
     }
-    private NodoE LeerGen(NodoE ptrE){
-        Nodo p;NodoE q;
+    
+    private NodoE LeerEquipos(NodoE ptr){
         LlenarEquipos();
-        for(Nodo ptr1 : Inicio.ptrS){
-            if(ptr1 != null){
-                if(ptrE == null){
-                    Nodo e =ptr1;
-                    NodoE r = ptrE;
-                    while(e != null){
-                        r = new NodoE();
-                        for(int i=0;i<E.size();i++){
-                            if(E.get(i).equals(e.Player.Equipo)){
-                                r.Equipo = e.Player.Equipo;
-                            }
+        
+        Nodo r;
+        
+        Duration T;
+        
+        boolean Swp;
+        
+        NodoE Revisar;
+        
+        for(Nodo Nodos : Inicio.ptrS){
+            if(ptr == null){
+               r = Nodos;
+               while(r != null){
+                   Revisar = ptr;Swp = false;
+                   while(Revisar != null && Swp != true){
+                       if(Revisar.Equipo.equals(r.Player.Equipo)){
+                           Swp = true;
+                            T = Revisar.Time;
+                            Revisar.Time = T.plus(r.Time);
+                       }else{
+                           Revisar = Revisar.link;
                        }
-                      r = r.link;
-                      e = e.link;
-                    }
-                }else{
-                    q = ptrE;
-                    while(q != null){
-                       p = ptr1;
-                       while(p!=null){
-                           if(q.Equipo.equals(p.Player.Equipo)){
-                               Duration temp;
-                               temp = p.Time;
-                               q.Time = temp.plus(p.Time);
-                           }
-                           p = p.link;
-                       }
-                       q = q.link;
-                    }
-                }
+                   }
+                   
+                   if(Swp != true){
+                       ptr = addCola(ptr,r.Player.Equipo,r.Time);
+                   }
+                   r = r.link;
+               }
                 
+            }else{
+                r = Nodos;
+                while(r != null){
+                    Revisar = ptr;Swp = false;
+                    while(Revisar != null && Swp != true){
+                           if(Revisar.Equipo.equals(r.Player.Equipo)){
+                               Swp = true;
+                                T = Revisar.Time;
+                                Revisar.Time = T.plus(r.Time);
+                           }else{
+                               Revisar = Revisar.link;
+                           }
+                       }
+                    r = r.link;
+                }
             }
         }
-        return ptrE;
+        
+        
+        
+        return ptr;
+    }
+//    private NodoE LeerGen(NodoE ptrE){
+//        Nodo p;NodoE q,Introducir, GuiaE;
+//        LlenarEquipos();
+//        for(Nodo Nodos : Inicio.ptrS){
+////            if(NodoEquipos != null){
+//                if(ptrE == null){
+//                    Nodo Guia = Nodos;
+//                    GuiaE = ptrE;
+//                    while(Guia != null){
+//                        Introducir = new NodoE();
+//                        for(int i=0;i<E.size();i++){
+//                            if(E.get(i).equals(Guia.Player.Equipo)){
+//                                Introducir.Equipo = Guia.Player.Equipo;
+//                            }
+//                       }
+//                      Introducir = Introducir.link;
+//                      Guia = Guia.link;
+//                    }
+//                }else{
+//                    q = ptrE;
+//                    while(q != null){
+//                       p = Nodos;
+//                       while(p!=null){
+//                           if(q.Equipo.equals(p.Player.Equipo)){
+//                               Duration temp;
+//                               temp = p.Time;
+//                               q.Time = temp.plus(p.Time);
+//                           }
+//                           p = p.link;
+//                       }
+//                       q = q.link;
+//                    }
+//                }
+//                
+////            }
+//        }
+//        return ptrE;
+//    }
+    
+    
+    NodoE addCola(NodoE ptr, String Equipo, Duration Time){
+        NodoE p =  ptr;
+        NodoE q = new NodoE();
+        q.Equipo = Equipo;
+        q.Time = Time;
+        if(ptr == null){
+            ptr = q;
+        }else{
+            while(p.link != null){
+                p = p.link;
+            }
+            p.link = q;
+        }
+        return ptr;
     }
     
     private NodoE OrdenarPtr(NodoE ptr){
         NodoE p,actual,q;
-        if(ptr!=null){
+        if(ptr != null){
             
             p = ptr;
             while(p != null){
@@ -134,6 +206,40 @@ public class ClasificacionEquipos extends javax.swing.JDialog {
         
         return ptr;
     }
+    
+    
+    
+    
+    private NodoE sortList(NodoE head) {  
+        //Node current will point to head  
+        NodoE current = head, index = null;  
+          
+        if(head == null) {  
+            return head;  
+        }  
+        else {  
+            while(current != null) {  
+                //Node index will point to node next to current  
+                index = current.link;  
+                  
+                while(index != null) {  
+                    //If current node's data is greater than index's node data, swap the data between them  
+                    if(current.Time.compareTo(index.Time)>0) {
+                        
+                        Duration T = current.Time;
+                        String Equipo = current.Equipo;  
+                        current.Equipo = index.Equipo;
+                        current.Time = index.Time;
+                        index.Time = T;
+                        index.Equipo = Equipo;
+                    }  
+                    index = index.link;  
+                }  
+                current = current.link;  
+            }      
+        }
+        return head;
+    }  
     
     private void showList(NodoE ptr){
 
