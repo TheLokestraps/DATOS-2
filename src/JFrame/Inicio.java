@@ -9,6 +9,7 @@ import Clases.*;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.ImageIcon;
@@ -28,6 +29,8 @@ public class Inicio extends javax.swing.JFrame {
     public static ArrayList<Nodo> ptrS;
     public static int Controlador;
     public static int Vueltas;
+    
+    public Nodo GenPTR;
     
     public Inicio() {
         initComponents();
@@ -119,8 +122,14 @@ public class Inicio extends javax.swing.JFrame {
         });
 
         jButton2.setText("Clasificacion Por Equipos");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Clasificacion de Paso");
+        jButton3.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -225,10 +234,52 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        Nodo Recuperador;
+        Recuperador = Inicio.ptrS.get(0);
         ClasificacionGen g = new ClasificacionGen(this,true);
+        this.setVisible(false);
         g.setVisible(true);
+        this.setVisible(true);
+        Inicio.ptrS.set(0, Recuperador);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Nodo Recuperador = Inicio.ptrS.get(0);
+        ClasificacionEquipos g = new ClasificacionEquipos(this,true);
+        this.setVisible(false);
+        g.setVisible(true);
+        this.setVisible(true);
+        Inicio.ptrS.set(0, Recuperador);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    
+    private Nodo LeerGen(Nodo ptr2){
+        Nodo p,q,r,ptr1;
+        int i = 0;
+        while(i<Inicio.ptrS.size()){
+                ptr1 = Inicio.ptrS.get(i);
+                if(ptr2 == null){
+                    ptr2 = ptr1;
+                }else{
+                    q = ptr2;
+                    while(q != null){
+                       p = ptr1;
+                       while(p!=null){
+                           if(q.Player.Nombre.equals(p.Player.Nombre)){
+                               Duration temp;
+                               temp = q.Time;
+                               q.Time = temp.plus(p.Time);
+                           }
+                           p = p.link;
+                       }
+                       q = q.link;
+                    }
+                }
+                i++;
+        }
+        return ptr2;
+    }
     /**
      * @param args the command line arguments
      */

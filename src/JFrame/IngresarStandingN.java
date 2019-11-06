@@ -25,8 +25,10 @@ public class IngresarStandingN extends javax.swing.JDialog {
     public IngresarStandingN(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        SetPtr();
         LlenarC();
         SetVuelta();
+        
     }
     
     private void SetVuelta(){
@@ -72,7 +74,14 @@ public class IngresarStandingN extends javax.swing.JDialog {
         }
     }
     
-   
+    private void SetPtr(){
+        if(Inicio.Controlador < Inicio.ptrS.size()){
+            ptr = Inicio.ptrS.get(Inicio.Vueltas);
+            showList(ptr);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Nodo vacio, ingrese los tiempos");
+        }
+    }
     
     private void LlenarC(){
         this.Corredores.removeAllItems();
@@ -83,7 +92,7 @@ public class IngresarStandingN extends javax.swing.JDialog {
         });
     }
     
-    private static String CorrejirD(Duration D){
+    public static String CorrejirD(Duration D){
         long AñadirH;
         AñadirH = 24*(D.toDaysPart());
         String AD = D.toHoursPart()+AñadirH+"H "+D.toMinutesPart()+"' "+D.toSecondsPart()+"''";
@@ -494,9 +503,20 @@ public class IngresarStandingN extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        if(ptr != null){
+            if(Inicio.ptrS.size() > Inicio.Controlador){
+                Inicio.ptrS.set(Inicio.Controlador, ptr);
+            }else{
+                Inicio.ptrS.add(ptr);
+            }   
+        }
+        Inicio.Controlador++;
+        Inicio.Vueltas++;
         this.dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 
+    
+    
     /**
      * @param args the command line arguments
      */

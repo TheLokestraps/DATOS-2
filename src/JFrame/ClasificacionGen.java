@@ -7,6 +7,7 @@ package JFrame;
 
 import Clases.*;
 import java.time.*;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,37 +27,43 @@ public class ClasificacionGen extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         Nodo p = ptr;
-        ptr = LeerGen(p);
-        p = ptr;
-        ptr = OrdenarPtr(p);
+        ptr = LeerGen(p,Inicio.ptrS);
+//        p = ptr;
+//        ptr = OrdenarPtr(p);
         showList(ptr);
     }
     
-    private Nodo LeerGen(Nodo ptr2){
+    private Nodo LeerGen(Nodo NodoGen, ArrayList<Nodo> Nodos){
         Nodo p,q,r;
-        for(Nodo ptr1 : Inicio.ptrS){
-            if(ptr1 != null){
-                if(ptr2 == null){
-                    ptr2 = ptr1;
+        boolean swp;
+        NodoGen = null;
+        System.out.println("La vuelta de inicio es "+IngresarStandingN.CorrejirD(Nodos.get(0).Time));
+        for(Nodo Vuelta : Nodos){
+//            if(Vuelta != null){
+                if(NodoGen == null){
+                    NodoGen = Copiar(Vuelta);
                 }else{
-                    q = ptr2;
+                    q = NodoGen;
                     while(q != null){
-                       p = ptr1;
-                       while(p!=null){
+                       p = Vuelta;
+                       swp = false;
+                       while(p != null && swp != true){
                            if(q.Player.Nombre.equals(p.Player.Nombre)){
                                Duration temp;
-                               temp = p.Time;
+                               temp = q.Time;
                                q.Time = temp.plus(p.Time);
+                               swp = true;
+                           }else{
+                                p = p.link;
                            }
-                           p = p.link;
                        }
                        q = q.link;
                     }
                 }
                 
-            }
+//            }
         }
-        return ptr2;
+        return NodoGen;
     }
     
     
@@ -132,8 +139,37 @@ public class ClasificacionGen extends javax.swing.JDialog {
         return AD;
     }
      
-    
-    
+  public Nodo Copiar(Nodo ptr1){
+      Nodo ptr2 = null,q,Aux;
+      if(ptr1 == null){
+          return null;
+      }else{
+          Nodo p = ptr1;
+          while(p!=null){
+             Aux = ptr2;
+             ptr2 = addCola(Aux,p.Player,p.Time);
+             p = p.link;
+          }
+          return ptr2;
+      }
+  }
+  
+  
+  Nodo addCola(Nodo ptr, Corredor Player, Duration Time){
+        Nodo p =  ptr;
+        Nodo q = new Nodo();
+        q.Player = Player;
+        q.Time = Time;
+        if(ptr == null){
+            ptr = q;
+        }else{
+            while(p.link != null){
+                p = p.link;
+            }
+            p.link = q;
+        }
+        return ptr;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

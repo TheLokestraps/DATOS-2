@@ -5,17 +5,178 @@
  */
 package JFrame;
 
+import Clases.*;
+import java.time.*;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author TheLokestraps
  */
-public class ClasificacionEquipos extends javax.swing.JFrame {
+public class ClasificacionEquipos extends javax.swing.JDialog {
 
     /**
      * Creates new form ClasificacionEquipos
      */
-    public ClasificacionEquipos() {
+    
+    ArrayList<String> E= new ArrayList<>();
+    
+    NodoE ptr;
+    public ClasificacionEquipos(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+        NodoE p = ptr;
+        ptr = LeerGen(p);
+        p = ptr;
+        ptr = OrdenarPtr(p);
+        showList(ptr);
+    }
+    
+    
+    class NodoE{
+        NodoE link;
+        String Equipo;
+        Duration Time;
+    }
+    
+    void LlenarEquipos(){
+        E.clear();
+        for(Corredor C : Inicio.corredores){
+            boolean swp = false;
+            String Entra = C.Equipo;
+            for(String Com : E){
+                if(Entra.equals(Com)){
+                    swp = true;
+                }
+            }
+            if(swp != true){
+                E.add(Entra);
+            }
+        }
+    }
+ 
+    private NodoE addACola(NodoE ptr, String Equipo){
+        NodoE p =  ptr;
+        NodoE q = new NodoE();
+        q.Equipo = Equipo;
+        if(ptr == null){
+            ptr = q;
+        }else{
+            while(p.link != null){
+                p = p.link;
+            }
+            p.link = q;
+        }
+        return ptr;
+    }
+    private NodoE LeerGen(NodoE ptrE){
+        Nodo p;NodoE q;
+        LlenarEquipos();
+        for(Nodo ptr1 : Inicio.ptrS){
+            if(ptr1 != null){
+                if(ptrE == null){
+                    Nodo e =ptr1;
+                    NodoE r = ptrE;
+                    while(e != null){
+                        r = new NodoE();
+                        for(int i=0;i<E.size();i++){
+                            if(E.get(i).equals(e.Player.Equipo)){
+                                r.Equipo = e.Player.Equipo;
+                            }
+                       }
+                      r = r.link;
+                      e = e.link;
+                    }
+                }else{
+                    q = ptrE;
+                    while(q != null){
+                       p = ptr1;
+                       while(p!=null){
+                           if(q.Equipo.equals(p.Player.Equipo)){
+                               Duration temp;
+                               temp = p.Time;
+                               q.Time = temp.plus(p.Time);
+                           }
+                           p = p.link;
+                       }
+                       q = q.link;
+                    }
+                }
+                
+            }
+        }
+        return ptrE;
+    }
+    
+    private NodoE OrdenarPtr(NodoE ptr){
+        NodoE p,actual,q;
+        if(ptr!=null){
+            
+            p = ptr;
+            while(p != null){
+                actual = p.link;
+                while(actual != null){
+                    if(p.Time.compareTo(actual.Time)> 0){
+                        q = p;
+                        p.Equipo = actual.Equipo;
+                        p.Time = actual.Time;
+                        actual.Equipo = q.Equipo;
+                        actual.Time = q.Time;
+                        
+                    }
+                    actual = actual.link;
+                }
+                p = p.link;
+            }
+        }
+        
+        return ptr;
+    }
+    
+    private void showList(NodoE ptr){
+
+        DefaultTableModel modelX = (DefaultTableModel) Tabla.getModel();
+        modelX.setRowCount(0);
+        NodoE p = ptr;
+        NodoE antp = null;
+        int i = 1;
+        Object[] row = new Object[4];
+        while(p!= null){
+            if(p == ptr){
+                row[0] = Integer.toString(i);
+                row[1] = p.Equipo;
+                row[2] = CorrejirD(p.Time);
+                modelX.addRow(row);
+                antp = p;
+                p = p.link;
+                i++;
+            }else{
+                row[0] = Integer.toString(i);
+                row[1] = p.Equipo;
+                row[2] = CorrejirD(p.Time);
+                Duration Dif, Aux = p.Time;
+                
+                if(antp != null){
+                    Dif = Aux.minus(ptr.Time);
+                    row[3] = "+ "+CorrejirD(Dif);
+                    antp = p;
+                    p = p.link;
+                    modelX.addRow(row);
+                    i++;
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Dumb");
+                }
+            }
+        }
+    }
+    
+    private static String CorrejirD(Duration D){
+        long AñadirH;
+        AñadirH = 24*(D.toDaysPart());
+        String AD = D.toHoursPart()+AñadirH+"H "+D.toMinutesPart()+"' "+D.toSecondsPart()+"''";
+        return AD;
     }
 
     /**
@@ -36,7 +197,7 @@ public class ClasificacionEquipos extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         Tabla = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -82,6 +243,11 @@ public class ClasificacionEquipos extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
 
         jButton1.setText("Regresar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -102,20 +268,17 @@ public class ClasificacionEquipos extends javax.swing.JFrame {
 
         Tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
-                "Posicion", "Numero", "Nombre", "Equipo", "Tiempo", "Diferencia"
+                "Posicion", "Equipo", "Tiempo", "Diferencia"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -163,6 +326,10 @@ public class ClasificacionEquipos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -192,8 +359,13 @@ public class ClasificacionEquipos extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ClasificacionEquipos().setVisible(true);
+            public void run() {ClasificacionEquipos dialog = new ClasificacionEquipos(new javax.swing.JFrame(), true);
+		dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				System.exit(0);
+			}
+		});
             }
         });
     }

@@ -42,7 +42,30 @@ public class Nodo {
         }
         return ptr;
     }
-    
+    private Nodo OrdenarPtr(Nodo ptr){
+        Nodo p,actual,q;
+        if(ptr!=null){
+            
+            p = ptr;
+            while(p != null){
+                actual = p.link;
+                while(actual != null){
+                    if(p.Time.compareTo(actual.Time)> 0){
+                        q = p;
+                        p.Player = actual.Player;
+                        p.Time = actual.Time;
+                        actual.Player = q.Player;
+                        actual.Time = q.Time;
+                        
+                    }
+                    actual = actual.link;
+                }
+                p = p.link;
+            }
+        }
+        
+        return ptr;
+    }
 
     public static Nodo Ordenado(Nodo ptr, Corredor Player, Duration Time){
             if(ptr == null){

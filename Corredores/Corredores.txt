@@ -1,23 +1,10 @@
-2//Egan Bernal//Colombia//Team Ineos//22
-1//Geraint Thomas//Great Britain//Team Ineos//33
-81//Steven Kruijswijk//Netherlands//Team Jumbo–Visma//32
-12//Emanuel Buchmann//Germany//Bora–Hansgrohe//26
-21//Julian Alaphilippe//France//Deceuninck–Quick-Step//27
-65//Mikel Landa//Spain//Movistar Team//29
-91//Rigoberto Urán//Colombia//EF Education First//32
-61//Nairo Quintana//Colombia//Movistar Team//29
-62//Alejandro Valverde//Spain//Movistar Team//39
-211//Warren Barguil//France//Arkéa–Samsic//27
-131//Richie Porte//Australia//Trek–Segafredo//34
-191//Guillaume Martin//France//Wanty–Groupe Gobert//26
-53//David Gaudu//France//Groupama–FDJ//22
-122//Fabio Aru//Italy//UAE Team Emirates//29
-31//Romain Bardet//France//AG2R La Mondiale//28
-206//Roman Kreuziger//Czechia//Team Dimension Data//33
-57//Sébastien Reichenbach//Switzerland//Groupama–FDJ//30
-121//Daniel Martin//Ireland//UAE Team Emirates//32
-76//Alexey Lutsenko//Kazakhstan//Astana//26
-154//Jesús Herrada//Spain//Cofidis//28
-195//Xandro Meurisse//Belgium//Wanty–Groupe Gobert//27
-25//Enric Mas//Spain//Deceuninck–Quick-Step//24
-83//Laurens De Plus//Belgium//Team Jumbo–Visma//23
+1//a//Colombia//X//22
+2//b//Great Britain//X//33
+3//c//Netherlands//Y//32
+4//d//Germany//Y//26
+5//e//France//Z//27
+6//f//Spain//Z//29
+7//g//Colombia//W//32
+8//h//Colombia//W//29
+9//i//Spain//R//39
+10//j//France//R//27
